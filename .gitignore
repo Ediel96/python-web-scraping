@@ -17,3 +17,6 @@ env/
 
 # Ignore other temporary files
 *.tmp
+
+# Ignore environment files
+.env
