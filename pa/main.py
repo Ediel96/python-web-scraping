@@ -26,7 +26,7 @@ def main():
 
         list_href = []
 
-        for i in range(2, 99):
+        for i in range(2, 100):
             try:
                 list_table = Wait(driver, 20).until(
                     lambda d: d.find_element(By.XPATH, "//*[@id='footable_1056']/tbody")
@@ -43,7 +43,7 @@ def main():
                 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                 time.sleep(num_sleep)
                 # Click on the pagination button
-                string = f"//a[@aria-label='page {i}']"
+                string = f"//a[@aria-label='next']"
                 pagination_button = Wait(driver, 20).until(
                     lambda d: d.find_element(By.XPATH, string)
                 )

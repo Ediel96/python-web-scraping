@@ -19,7 +19,7 @@ for i, url in enumerate(urls):
         response = requests.get(url)
         response.raise_for_status()  # Verifica si hubo algún error en la descarga
 
-        # Nombre del archivo (puedes personalizarlo)
+        # Nombre del archivo personalizado basado en la URL
         filename = os.path.join(output_folder, f"file_{i + 1}.pdf")
 
         # Guardar el archivo
