@@ -22,11 +22,11 @@ def main():
         driver = Chrome(service=service, options=option)
         driver.get("https://courdappelcommerceabidjan.org/arrets-de-la-cour-dappel-de-commerce-dabidjan/")
 
-        time.sleep(num_sleep)
 
         list_href = []
+        list
 
-        for i in range(2, 100):
+        for i in range(2, 295):
             try:
                 list_table = Wait(driver, 20).until(
                     lambda d: d.find_element(By.XPATH, "//*[@id='footable_1056']/tbody")
@@ -36,12 +36,17 @@ def main():
                 for row in rows:
                     try:
                         class_row = row.get_attribute("class")
-                        href = row.find_element(By.XPATH, f"//tr[contains(@class, '{class_row}')]/td/p/a").get_attribute("href")
-                        list_href.append(href)
+                        try:
+                            href = row.find_element(By.XPATH, f"//tr[contains(@class, '{class_row}')]/td/p/a").get_attribute("href")
+                            # print(f"class: {class_row} href: {href}")
+                            list_href.append(href)
+                        except Exception as e:
+                            print(f"Error al obtener el href de una fila: {e}")
+                            # list_href.append(None)  # Almacenar None si no se encuentra el elemento
+                        # list_href.append(href)
                     except Exception as e:
                         print(f"Error al obtener el href de una fila: {e}")
                 driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-                time.sleep(num_sleep)
                 # Click on the pagination button
                 string = f"//a[@aria-label='next']"
                 pagination_button = Wait(driver, 20).until(
@@ -58,9 +63,21 @@ def main():
 
         print("Total href:", len(list_href))  # Print the total number of hrefs
         # export to text file
-        with open("list_href.txt", "w") as file:
+        with open("list_href.txt", "a") as file:
             for href in list_href:
                 file.write(href + "\n")
+
+        # export to json file
+        import json
+        with open("list_href.json", "w") as file:
+            json.dump(list_href, file, indent=4)
+
+        # export to csv file
+        import csv
+        with open("list_href.csv", "w", newline='') as file:
+            writer = csv.writer(file)
+            for href in list_href:
+                writer.writerow([href])
 
     except Exception as e:
         print(f"Error general: {e}")
