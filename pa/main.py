@@ -8,6 +8,8 @@ import time #tiempo
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait as Wait
 
+import requests
+
 #variables
 USSERNAME = "standard_user"
 PASSWORD = "secret_sauce"
@@ -63,21 +65,36 @@ def main():
 
         print("Total href:", len(list_href))  # Print the total number of hrefs
         # export to text file
-        with open("list_href.txt", "a") as file:
-            for href in list_href:
-                file.write(href + "\n")
+        # with open("list_href.txt", "a") as file:
+        #     for href in list_href:
+        #         file.write(href + "\n")
 
-        # export to json file
-        import json
-        with open("list_href.json", "w") as file:
-            json.dump(list_href, file, indent=4)
+        # download files
+        for index, href in enumerate(list_href):
+            try:
+                response = requests.get(href)
+                if response.status_code == 200:
+                    with open(f"downloads/file_{index + 1}.pdf", "wb") as file:
+                        file.write(response.content)
+                    print(f"File {index + 1} downloaded successfully.")
+                else:
+                    print(f"Failed to download file {index + 1}. Status code: {response.status_code}")
+            except Exception as e:
+                print(f"Error downloading file {index + 1}: {e}")
+        # # export to text file
 
-        # export to csv file
-        import csv
-        with open("list_href.csv", "w", newline='') as file:
-            writer = csv.writer(file)
-            for href in list_href:
-                writer.writerow([href])
+
+        # # export to json file
+        # import json
+        # with open("list_href.json", "w") as file:
+        #     json.dump(list_href, file, indent=4)
+
+        # # export to csv file
+        # import csv
+        # with open("list_href.csv", "w", newline='') as file:
+        #     writer = csv.writer(file)
+        #     for href in list_href:
+        #         writer.writerow([href])
 
     except Exception as e:
         print(f"Error general: {e}")
